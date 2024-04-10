@@ -45,7 +45,7 @@ func run(args []string) error {
 			line := Line{
 				Type:  checkpoint.Block.Kind,
 				In:    checkpoint.In,
-				Out:   checkpoint.Out,
+				Out:   checkpoint.Out + int64(checkpoint.WrPos) - int64(checkpoint.RdPos),
 				Size:  checkpoint.Block.Size,
 				Final: checkpoint.Block.Final,
 			}
