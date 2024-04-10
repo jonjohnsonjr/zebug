@@ -24,6 +24,7 @@ type Line struct {
 	Type    string         `json:"type,omitempty"`
 	In      int64          `json:"in"`
 	Out     int64          `json:"out"`
+	Bits    string         `json:"bits,omitempty"`
 	Size    int64          `json:"size,omitempty"`
 	Final   bool           `json:"final,omitempty"`
 	Header  *flate.Header  `json:"header,omitempty"`
@@ -51,6 +52,9 @@ func run(args []string) error {
 				Out:   out,
 				Final: checkpoint.Block.Final,
 				In:    in,
+			}
+			if checkpoint.NB != 0 {
+				nextLine.Bits = fmt.Sprintf("%b", checkpoint.B)
 			}
 
 			in = checkpoint.In
