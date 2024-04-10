@@ -45,6 +45,7 @@ func run(args []string) error {
 		enc := json.NewEncoder(os.Stdout)
 
 		var line *Line = nil
+		var header *Line = nil
 		in, out := int64(0), int64(0)
 		for checkpoint := range updates {
 			nextLine := &Line{
@@ -76,6 +77,7 @@ func run(args []string) error {
 			}
 
 			if checkpoint.Header != nil {
+				header = nextLine
 				nextLine.Header = checkpoint.Header
 				if line != nil && line.Trailer != nil {
 					line.Trailer.Csize = 8
@@ -87,7 +89,7 @@ func run(args []string) error {
 
 			if line != nil {
 				if nextLine.Trailer != nil {
-					nextLine.Out = line.Out
+					nextLine.Out = header.Out + int64(nextLine.Trailer.Size)
 				}
 				if nextLine.Header != nil {
 					nextLine.Out = line.Out
