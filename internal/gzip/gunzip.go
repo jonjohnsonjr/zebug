@@ -319,9 +319,9 @@ func (z *Reader) readHeader() (hdr Header, err error) {
 var emptyTime = time.Time{}
 
 func toFlateHeader(hdr Header) *flate.Header {
-	if len(hdr.Extra) == 0 && len(hdr.Comment) == 0 && hdr.ModTime == emptyTime && len(hdr.Name) == 0 && hdr.OS == 255 {
-		return nil
-	}
+	// if len(hdr.Extra) == 0 && len(hdr.Comment) == 0 && hdr.ModTime == emptyTime && len(hdr.Name) == 0 && hdr.OS == 255 {
+	// 	return nil
+	// }
 	h := &flate.Header{
 		Comment: hdr.Comment,
 		Extra:   hdr.Extra,
@@ -330,9 +330,10 @@ func toFlateHeader(hdr Header) *flate.Header {
 	if hdr.ModTime != emptyTime {
 		h.ModTime = &hdr.ModTime
 	}
-	if hdr.OS != 255 {
-		h.OS = &hdr.OS
-	}
+	h.OS = &hdr.OS
+	// if hdr.OS != 255 {
+	// 	h.OS = &hdr.OS
+	// }
 	return h
 }
 
@@ -371,6 +372,7 @@ func (z *Reader) Read(p []byte) (n int, err error) {
 			In:  z.decompressor.Roffset(),
 			Out: z.Offset(),
 			Trailer: &flate.Trailer{
+				Csize:  8,
 				Digest: z.Trailer.Digest,
 				Size:   z.Trailer.Size,
 			},

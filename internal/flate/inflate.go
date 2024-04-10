@@ -795,15 +795,16 @@ func (f *Decompressor) finishBlock() {
 	}
 	if f.updates != nil {
 		checkpoint := &Checkpoint{
-			Hist:  make([]byte, len(f.dict.hist)),
-			In:    f.roffset,
-			Out:   woffset,
-			B:     f.b,
-			NB:    f.nb,
-			WrPos: f.dict.wrPos,
-			RdPos: f.dict.rdPos,
-			Full:  f.dict.full,
-			Block: f.block,
+			Hist:   make([]byte, len(f.dict.hist)),
+			In:     f.roffset,
+			Out:    woffset,
+			B:      f.b,
+			NB:     f.nb,
+			WrPos:  f.dict.wrPos,
+			RdPos:  f.dict.rdPos,
+			ToRead: len(f.toRead),
+			Full:   f.dict.full,
+			Block:  f.block,
 		}
 		copy(checkpoint.Hist, f.dict.hist)
 
@@ -975,11 +976,13 @@ type Header struct {
 	ModTime *time.Time `json:"modtime,omitempty"`
 	Name    string     `json:"name,omitempty"`
 	OS      *byte      `json:"os,omitempty"`
+	Csize   int64      `json:"size,omitempty"`
 }
 
 type Trailer struct {
 	Digest uint32 `json:"crc32,omitempty"`
 	Size   uint32 `json:"isize,omitempty"`
+	Csize  int64  `json:"size,omitempty"`
 }
 
 type Checkpoint struct {
@@ -993,9 +996,10 @@ type Checkpoint struct {
 	Hist []byte `json:"hist,omitempty"`
 
 	// Trying random stuff...
-	WrPos int  `json:"wrpos,omitempty"`
-	RdPos int  `json:"rdpos,omitempty"`
-	Full  bool `json:"full,omitempty"`
+	WrPos  int  `json:"wrpos,omitempty"`
+	RdPos  int  `json:"rdpos,omitempty"`
+	ToRead int  `json:"toread,omitempty"`
+	Full   bool `json:"full,omitempty"`
 
 	// If there is no Hist, we can avoid writing the file.
 	Empty bool `json:"empty,omitempty"`
