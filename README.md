@@ -186,3 +186,9 @@ $ zebug < ubuntu.tar.gz | jq .Size | grep -v null | paste -s -d+ - | bc
     * Huffman trees
     * Pointers
     * Window utilization
+
+## See Also
+
+* https://github.com/madler/infgen
+
+If I had known about `infgen` last week, I probably would not have made this!
